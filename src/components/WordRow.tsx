@@ -41,7 +41,7 @@ const WordRow: React.FC<WordRowProps> = ({
           />
         ))}
       </div>
-      <div className="w-12 sm:w-16 h-8 sm:h-10 bg-blue-100 text-blue-800 rounded-full flex items-center justify-center text-sm sm:text-lg font-semibold flex-shrink-0">
+      <div className="w-12 sm:w-16 h-8 sm:h-10 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full flex items-center justify-center text-sm sm:text-lg font-semibold flex-shrink-0">
         {isCompleted && solveTime !== undefined ? formatSmallTime(solveTime) : ""}
       </div>
     </div>

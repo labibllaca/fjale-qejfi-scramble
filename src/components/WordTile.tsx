@@ -24,7 +24,7 @@ const WordTile: React.FC<WordTileProps> = ({
         w-12 h-14 sm:w-16 sm:h-20 flex items-center justify-center text-xl sm:text-3xl font-bold
         rounded-md transition-all flex-shrink-0
         ${isCompleted ? 'bg-gameGreen text-white' : 
-          isSelected ? 'bg-gray-200 text-gray-700' : 'bg-white border-2 border-gray-200 text-black'}
+          isSelected ? 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200' : 'bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 text-black dark:text-white'}
       `}
     >
       {letter.toUpperCase()}

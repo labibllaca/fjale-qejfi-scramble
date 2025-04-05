@@ -27,9 +27,9 @@ const Timer: React.FC<TimerProps> = ({ initialTime, onTimeUp }) => {
   }, [onTimeUp]);
   
   return (
-    <div className="flex items-center bg-gray-100 p-3 rounded-lg">
-      <Clock className="w-5 h-5 mr-2" />
-      <span className="text-2xl font-semibold">{formatTime(timeRemaining)}</span>
+    <div className="flex items-center bg-gray-100 dark:bg-gray-700 p-3 rounded-lg">
+      <Clock className="w-5 h-5 mr-2 dark:text-gray-300" />
+      <span className="text-2xl font-semibold dark:text-white">{formatTime(timeRemaining)}</span>
     </div>
   );
 };

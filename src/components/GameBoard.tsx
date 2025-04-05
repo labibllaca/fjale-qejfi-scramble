@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import WordRow from './WordRow';
 import BuildWord from './BuildWord';
@@ -133,8 +134,8 @@ const GameBoard: React.FC = () => {
         });
         
         toast({
-          title: "Good job!",
-          description: `You solved "${currentWord.original}" correctly!`,
+          title: "Shumë mirë!",
+          description: `Ke zgjidhur "${currentWord.original}" saktësisht!`,
         });
         
         // Reset selected letters for next word
@@ -148,7 +149,6 @@ const GameBoard: React.FC = () => {
           // Generate a new word
           const newWord = getRandomWord();
           setGameWords(prevWords => [
-            ...prevWords,
             {
               original: newWord,
               shuffled: shuffleWord(newWord),
@@ -156,8 +156,9 @@ const GameBoard: React.FC = () => {
               selectedIndices: [],
               startTime: Date.now(),
             },
+            ...prevWords,
           ]);
-          setCurrentWordIndex(currentWordIndex + 1);
+          setCurrentWordIndex(0);
         }
       }
     }
@@ -211,22 +212,21 @@ const GameBoard: React.FC = () => {
   const handleGameOver = () => {
     setGameOver(true);
     toast({
-      title: "Time's up!",
-      description: "Game over! You can start a new game.",
+      title: "Koha mbaroi!",
+      description: "Loja mbaroi! Mund të fillosh një lojë të re.",
       variant: "destructive",
     });
   };
 
-  // Display words in reverse order (newest at the top)
-  const displayWords = [...gameWords].reverse();
-  const currentBottomWord = gameWords[gameWords.length - 1]?.shuffled.toLowerCase() || "";
+  // Display words (the array is already in the right order with newest at index 0)
+  const currentBottomWord = gameWords[currentWordIndex]?.shuffled.toLowerCase() || "";
   
   return (
     <div className="max-w-xl mx-auto px-2 sm:px-4">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <div>
-          <h1 className="text-2xl sm:text-4xl font-bold">Fjalë qejfi</h1>
-          <p className="text-sm sm:text-base text-gray-500 mt-1 sm:mt-2">Unscramble the hidden words</p>
+          <h1 className="text-2xl sm:text-4xl font-bold dark:text-white">Fjalë qejfi</h1>
+          <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">Rindërtoni fjalët e përziera</p>
         </div>
         <Timer initialTime={GAME_TIME} onTimeUp={handleGameOver} />
       </div>
@@ -238,15 +238,19 @@ const GameBoard: React.FC = () => {
       />
       
       <div className="space-y-2 sm:space-y-4">
-        {displayWords.map((word, index) => (
+        {gameWords.map((word, index) => (
           <WordRow
-            key={displayWords.length - index - 1}
-            rowNumber={displayWords.length - index}
+            key={index}
+            rowNumber={index + 1}
             word={word.original}
             shuffledWord={word.shuffled}
-            onLetterClick={(letter, letterIndex) => handleLetterClick(letter, letterIndex)}
+            onLetterClick={(letter, letterIndex) => {
+              if (index === currentWordIndex) {
+                handleLetterClick(letter, letterIndex);
+              }
+            }}
             isCompleted={word.completed}
-            selectedIndices={word.selectedIndices}
+            selectedIndices={index === currentWordIndex ? word.selectedIndices : []}
             solveTime={word.solveTime}
           />
         ))}
@@ -254,26 +258,26 @@ const GameBoard: React.FC = () => {
       
       {gameOver && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-sm mx-auto">
-            <h2 className="text-2xl font-bold mb-4">Game Over!</h2>
-            <p>You solved {gameWords.filter(word => word.completed).length} words.</p>
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-sm mx-auto">
+            <h2 className="text-2xl font-bold mb-4 dark:text-white">Loja mbaroi!</h2>
+            <p className="dark:text-gray-300">Ke zgjidhur {gameWords.filter(word => word.completed).length} fjalë.</p>
             <button 
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg w-full"
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg w-full hover:bg-blue-600"
               onClick={() => window.location.reload()}
             >
-              Play Again
+              Luaj përsëri
             </button>
           </div>
         </div>
       )}
       
       {!gameOver && (
-        <div className="fixed bottom-0 left-0 right-0 p-2 sm:p-4 bg-white border-t shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 p-2 sm:p-4 bg-white dark:bg-gray-800 border-t dark:border-gray-700 shadow-lg">
           <div className="max-w-xl mx-auto flex justify-center space-x-1 sm:space-x-4">
             {currentBottomWord.split('').map((letter, index) => (
               <div 
                 key={index}
-                className="w-10 h-10 sm:w-12 sm:h-12 bg-white border-2 border-gray-200 rounded flex items-center justify-center text-lg sm:text-xl font-bold"
+                className="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded flex items-center justify-center text-lg sm:text-xl font-bold dark:text-white"
               >
                 {letter.toUpperCase()}
               </div>
