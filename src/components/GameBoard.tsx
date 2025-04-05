@@ -6,6 +6,7 @@ import Timer from './Timer';
 import { getRandomWord, shuffleWord } from '../utils/wordUtils';
 import { toast } from '../components/ui/use-toast';
 import { useIsMobile } from '../hooks/use-mobile';
+import { WORD_LIST } from '../data/albanianWords';
 
 interface GameWord {
   original: string;
@@ -14,6 +15,7 @@ interface GameWord {
   selectedIndices: number[];
   solveTime?: number;
   startTime?: number;
+  date?: string; // Add date field to track when this word was played
 }
 
 const GAME_TIME = 5 * 60; // 5 minutes in seconds
@@ -24,20 +26,62 @@ const GameBoard: React.FC = () => {
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
   const [letterIndices, setLetterIndices] = useState<number[]>([]);
   const [gameOver, setGameOver] = useState(false);
+  const [playedWords, setPlayedWords] = useState<Record<string, GameWord[]>>({});
+  const [showCalendar, setShowCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const isMobile = useIsMobile();
 
-  // Generate initial set of words
+  // Load played words from localStorage
   useEffect(() => {
+    const savedWords = localStorage.getItem('playedWords');
+    if (savedWords) {
+      setPlayedWords(JSON.parse(savedWords));
+    }
+  }, []);
+
+  // Save played words to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('playedWords', JSON.stringify(playedWords));
+  }, [playedWords]);
+
+  // Generate initial set of words avoiding previously played words for today
+  useEffect(() => {
+    const today = new Date().toISOString().split('T')[0];
+    const todaysPlayedWords = playedWords[today] || [];
+    const playedWordTexts = todaysPlayedWords.map(w => w.original);
+    
     const words: GameWord[] = [];
+    const usedWords = new Set(playedWordTexts);
+    
     for (let i = 0; i < 4; i++) {
-      const word = getRandomWord();
+      // Try to find a word that hasn't been played today
+      let attempts = 0;
+      let word;
+      
+      while (attempts < 50) {
+        word = getRandomWord();
+        if (!usedWords.has(word)) {
+          break;
+        }
+        attempts++;
+      }
+      
+      // If we couldn't find a new word after 50 attempts, just use any word
+      if (!word || usedWords.has(word)) {
+        word = getRandomWord();
+      }
+      
+      usedWords.add(word);
+      
       words.push({
         original: word,
         shuffled: shuffleWord(word),
         completed: false,
         selectedIndices: [],
+        date: today
       });
     }
+    
     setGameWords(words);
   }, []);
 
@@ -112,6 +156,7 @@ const GameBoard: React.FC = () => {
       const newWord = [...selectedLetters, letter].join('').toLowerCase();
       if (newWord === currentWord.original.toLowerCase()) {
         const solveTime = Math.floor((Date.now() - (currentWord.startTime || Date.now())) / 1000);
+        const today = new Date().toISOString().split('T')[0];
         
         // Mark word as complete
         setGameWords(prevWords => {
@@ -120,6 +165,7 @@ const GameBoard: React.FC = () => {
             ...updatedWords[currentWordIndex],
             completed: true,
             solveTime,
+            date: today
           };
           
           // Start timer for the next word if available
@@ -131,6 +177,21 @@ const GameBoard: React.FC = () => {
           }
           
           return updatedWords;
+        });
+        
+        // Save the completed word to playedWords
+        setPlayedWords(prevPlayedWords => {
+          const today = new Date().toISOString().split('T')[0];
+          const todayWords = prevPlayedWords[today] || [];
+          return {
+            ...prevPlayedWords,
+            [today]: [...todayWords, {
+              ...currentWord,
+              completed: true,
+              solveTime,
+              date: today
+            }]
+          };
         });
         
         toast({
@@ -147,22 +208,42 @@ const GameBoard: React.FC = () => {
           setCurrentWordIndex(currentWordIndex + 1);
         } else {
           // Generate a new word
-          const newWord = getRandomWord();
+          const today = new Date().toISOString().split('T')[0];
+          const todaysPlayedWords = playedWords[today] || [];
+          const usedWords = new Set(todaysPlayedWords.map(w => w.original));
+          
+          // Try to find a word that hasn't been played today
+          let attempts = 0;
+          let newWord;
+          
+          while (attempts < 50) {
+            newWord = getRandomWord();
+            if (!usedWords.has(newWord)) {
+              break;
+            }
+            attempts++;
+          }
+          
+          // If we couldn't find a new word after 50 attempts, just use any word
+          if (!newWord || usedWords.has(newWord)) {
+            newWord = getRandomWord();
+          }
+          
           setGameWords(prevWords => [
+            ...prevWords,
             {
               original: newWord,
               shuffled: shuffleWord(newWord),
               completed: false,
               selectedIndices: [],
               startTime: Date.now(),
-            },
-            ...prevWords,
+              date: today
+            }
           ]);
-          setCurrentWordIndex(0);
         }
       }
     }
-  }, [gameWords, currentWordIndex, selectedLetters, letterIndices]);
+  }, [gameWords, currentWordIndex, selectedLetters, letterIndices, playedWords]);
 
   const handleSelectedLetterClick = (index: number) => {
     // Remove letter from selection
@@ -218,7 +299,7 @@ const GameBoard: React.FC = () => {
     });
   };
 
-  // Display words (the array is already in the right order with newest at index 0)
+  // Display words (with new words added at the bottom)
   const currentBottomWord = gameWords[currentWordIndex]?.shuffled.toLowerCase() || "";
   
   return (
@@ -252,6 +333,7 @@ const GameBoard: React.FC = () => {
             isCompleted={word.completed}
             selectedIndices={index === currentWordIndex ? word.selectedIndices : []}
             solveTime={word.solveTime}
+            showTimer={!isMobile || word.completed}
           />
         ))}
       </div>

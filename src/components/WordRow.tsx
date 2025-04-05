@@ -12,6 +12,7 @@ interface WordRowProps {
   isCompleted: boolean;
   selectedIndices: number[];
   solveTime?: number;
+  showTimer?: boolean;
 }
 
 const WordRow: React.FC<WordRowProps> = ({
@@ -21,7 +22,8 @@ const WordRow: React.FC<WordRowProps> = ({
   onLetterClick,
   isCompleted,
   selectedIndices,
-  solveTime
+  solveTime,
+  showTimer = true
 }) => {
   const isMobile = useIsMobile();
   
@@ -41,9 +43,11 @@ const WordRow: React.FC<WordRowProps> = ({
           />
         ))}
       </div>
-      <div className="w-12 sm:w-16 h-8 sm:h-10 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full flex items-center justify-center text-sm sm:text-lg font-semibold flex-shrink-0">
-        {isCompleted && solveTime !== undefined ? formatSmallTime(solveTime) : ""}
-      </div>
+      {showTimer && (
+        <div className="w-12 sm:w-16 h-8 sm:h-10 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full flex items-center justify-center text-sm sm:text-lg font-semibold flex-shrink-0">
+          {isCompleted && solveTime !== undefined ? formatSmallTime(solveTime) : ""}
+        </div>
+      )}
     </div>
   );
 };

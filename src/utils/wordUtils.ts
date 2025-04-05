@@ -1,18 +1,6 @@
 
-// Albanian words up to 5 letters
-const ALBANIAN_WORDS = [
-  "kafe", "shtëpi", "qen", "mace", "bukë", 
-  "lule", "diell", "hënë", "det", "mal",
-  "dritë", "natë", "ujë", "zjarr", "tokë",
-  "dashuri", "punë", "lojë", "fjalë", "qejf",
-  "buka", "mami", "babi", "dora", "koka",
-  "syri", "gojë", "fund", "film", "mirë",
-  "keq", "nxënës", "mësues", "luftë", "paqe",
-  "këngë", "valle", "shi", "borë", "erë"
-];
-
-// Filter out words longer than 5 letters
-export const WORD_LIST = ALBANIAN_WORDS.filter(word => word.length <= 5);
+// Import the Albanian words list from the data file
+import { WORD_LIST } from '../data/albanianWords';
 
 // Shuffle the letters of a word
 export const shuffleWord = (word: string): string => {
@@ -49,4 +37,45 @@ export const formatTime = (seconds: number): string => {
 // Format small time display as 0:SS
 export const formatSmallTime = (seconds: number): string => {
   return `0:${seconds < 10 ? '0' : ''}${seconds}`;
+};
+
+// Format just seconds
+export const formatSeconds = (seconds: number): string => {
+  return `${seconds}s`;
+};
+
+// Get all unique dates that have played words
+export const getPlayedDates = (): string[] => {
+  const playedWordsStr = localStorage.getItem('playedWords');
+  
+  if (playedWordsStr) {
+    const playedWords = JSON.parse(playedWordsStr);
+    return Object.keys(playedWords);
+  }
+  
+  return [];
+};
+
+// Check if a specific date has played words
+export const hasPlayed = (dateStr: string): boolean => {
+  const playedWordsStr = localStorage.getItem('playedWords');
+  
+  if (playedWordsStr) {
+    const playedWords = JSON.parse(playedWordsStr);
+    return !!playedWords[dateStr] && playedWords[dateStr].length > 0;
+  }
+  
+  return false;
+};
+
+// Get played words for a specific date
+export const getPlayedWordsForDate = (dateStr: string): any[] => {
+  const playedWordsStr = localStorage.getItem('playedWords');
+  
+  if (playedWordsStr) {
+    const playedWords = JSON.parse(playedWordsStr);
+    return playedWords[dateStr] || [];
+  }
+  
+  return [];
 };
