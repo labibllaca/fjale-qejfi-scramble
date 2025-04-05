@@ -1,10 +1,10 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import WordRow from './WordRow';
 import BuildWord from './BuildWord';
 import Timer from './Timer';
 import { getRandomWord, shuffleWord } from '../utils/wordUtils';
 import { toast } from '../components/ui/use-toast';
+import { useIsMobile } from '../hooks/use-mobile';
 
 interface GameWord {
   original: string;
@@ -23,6 +23,7 @@ const GameBoard: React.FC = () => {
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
   const [letterIndices, setLetterIndices] = useState<number[]>([]);
   const [gameOver, setGameOver] = useState(false);
+  const isMobile = useIsMobile();
 
   // Generate initial set of words
   useEffect(() => {
@@ -216,14 +217,16 @@ const GameBoard: React.FC = () => {
     });
   };
 
+  // Display words in reverse order (newest at the top)
+  const displayWords = [...gameWords].reverse();
   const currentBottomWord = gameWords[gameWords.length - 1]?.shuffled.toLowerCase() || "";
   
   return (
-    <div className="max-w-xl mx-auto px-4">
-      <div className="flex justify-between items-center mb-6">
+    <div className="max-w-xl mx-auto px-2 sm:px-4">
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
         <div>
-          <h1 className="text-4xl font-bold">Fjalë qejfi</h1>
-          <p className="text-gray-500 mt-2">Unscramble the hidden words</p>
+          <h1 className="text-2xl sm:text-4xl font-bold">Fjalë qejfi</h1>
+          <p className="text-sm sm:text-base text-gray-500 mt-1 sm:mt-2">Unscramble the hidden words</p>
         </div>
         <Timer initialTime={GAME_TIME} onTimeUp={handleGameOver} />
       </div>
@@ -234,11 +237,11 @@ const GameBoard: React.FC = () => {
         onClear={handleClearSelection}
       />
       
-      <div className="space-y-4">
-        {gameWords.map((word, index) => (
+      <div className="space-y-2 sm:space-y-4">
+        {displayWords.map((word, index) => (
           <WordRow
-            key={index}
-            rowNumber={index + 1}
+            key={displayWords.length - index - 1}
+            rowNumber={displayWords.length - index}
             word={word.original}
             shuffledWord={word.shuffled}
             onLetterClick={(letter, letterIndex) => handleLetterClick(letter, letterIndex)}
@@ -250,12 +253,12 @@ const GameBoard: React.FC = () => {
       </div>
       
       {gameOver && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg max-w-sm mx-auto">
             <h2 className="text-2xl font-bold mb-4">Game Over!</h2>
             <p>You solved {gameWords.filter(word => word.completed).length} words.</p>
             <button 
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg w-full"
               onClick={() => window.location.reload()}
             >
               Play Again
@@ -265,12 +268,12 @@ const GameBoard: React.FC = () => {
       )}
       
       {!gameOver && (
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t shadow-lg">
-          <div className="max-w-xl mx-auto flex justify-center space-x-4">
+        <div className="fixed bottom-0 left-0 right-0 p-2 sm:p-4 bg-white border-t shadow-lg">
+          <div className="max-w-xl mx-auto flex justify-center space-x-1 sm:space-x-4">
             {currentBottomWord.split('').map((letter, index) => (
               <div 
                 key={index}
-                className="w-12 h-12 bg-white border-2 border-gray-200 rounded flex items-center justify-center text-xl font-bold"
+                className="w-10 h-10 sm:w-12 sm:h-12 bg-white border-2 border-gray-200 rounded flex items-center justify-center text-lg sm:text-xl font-bold"
               >
                 {letter.toUpperCase()}
               </div>
