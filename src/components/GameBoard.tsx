@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import WordRow from './WordRow';
 import BuildWord from './BuildWord';
 import Timer from './Timer';
@@ -7,6 +7,7 @@ import GameOver from './GameOver';
 import BottomWordDisplay from './BottomWordDisplay';
 import { useIsMobile } from '../hooks/use-mobile';
 import { useGameState } from '../hooks/use-game-state';
+import { shuffleWord } from '../utils/wordUtils';
 
 const GAME_TIME = 5 * 60; // 5 minutes in seconds
 
@@ -23,6 +24,33 @@ const GameBoard: React.FC = () => {
     handleClearSelection,
     handleGameOver,
   } = useGameState();
+
+  const [showCorrectWord, setShowCorrectWord] = useState(false);
+
+  // Function to handle bottom word letter click
+  const handleBottomLetterClick = (letter: string, index: number) => {
+    handleLetterClick(letter, index);
+    
+    // Check if the word is completed after this letter
+    const currentWord = gameWords[currentWordIndex];
+    const newSelectedWord = [...selectedLetters, letter].join('').toLowerCase();
+    
+    if (newSelectedWord === currentWord?.original.toLowerCase()) {
+      // If correct word assembled, show the correct word briefly
+      setShowCorrectWord(true);
+      setTimeout(() => setShowCorrectWord(false), 2000); // Show for 2 seconds
+    }
+  };
+
+  // Function to randomize the bottom word when a letter is clicked
+  const handleRandomizeBottomLetter = (letter: string, index: number) => {
+    // First add the letter to selected letters
+    handleBottomLetterClick(letter, index);
+    
+    // Then shuffle the remaining letters in the bottom display
+    // This is handled automatically by the game state as we're using the same
+    // letter indices tracking mechanism
+  };
 
   return (
     <div className="max-w-xl mx-auto px-2 sm:px-4">
@@ -68,7 +96,12 @@ const GameBoard: React.FC = () => {
       )}
       
       {!gameOver && (
-        <BottomWordDisplay word={currentBottomWord} />
+        <BottomWordDisplay 
+          word={currentBottomWord} 
+          onLetterClick={handleRandomizeBottomLetter}
+          showCorrectWord={showCorrectWord}
+          correctWord={gameWords[currentWordIndex]?.original || ""}
+        />
       )}
     </div>
   );
