@@ -27,6 +27,9 @@ const WordRow: React.FC<WordRowProps> = ({
 }) => {
   const isMobile = useIsMobile();
   
+  // Only show timer on mobile for completed words, always show on desktop
+  const shouldShowTimer = isMobile ? isCompleted : showTimer;
+  
   return (
     <div className="flex items-center space-x-1 sm:space-x-2 mb-2 sm:mb-4">
       <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gameGreen text-white rounded-full flex items-center justify-center text-sm sm:text-xl font-bold flex-shrink-0">
@@ -43,7 +46,7 @@ const WordRow: React.FC<WordRowProps> = ({
           />
         ))}
       </div>
-      {showTimer && (
+      {shouldShowTimer && (
         <div className="w-12 sm:w-16 h-8 sm:h-10 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 rounded-full flex items-center justify-center text-sm sm:text-lg font-semibold flex-shrink-0">
           {isCompleted && solveTime !== undefined ? formatSmallTime(solveTime) : ""}
         </div>

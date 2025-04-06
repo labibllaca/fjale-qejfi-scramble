@@ -1,4 +1,3 @@
-
 // Collection of Albanian words for the word game
 export const ALBANIAN_WORDS = [
   // 2-letter words
@@ -72,9 +71,37 @@ export const ALBANIAN_WORDS = [
   "vishem", "vishesh", "vishet", "vishemi", "visheni", "vishen", "zhvishem", "zhvishesh", "zhvishet", "zhvishemi", "zhvisheni",
   "zhvishen", "lahem", "lahesh", "lahet", "lahemi", "laheni", "lahen", "pastroj", "pastron", "pastrojmë", "pastroni",
   "pastrojnë", "ndryshoj", "ndryshon", "ndryshojmë", "ndryshoni", "ndryshojnë", "qesh", "qesh", "qeshim", "qeshni",
-  "qeshin", "qaj", "qan", "qajmë", "qani", "qajnë", "dashuroj", "dashuron", "dashurojmë", "dashuroni", "dashurojnë"
+  "qeshin", "qaj", "qan", "qajmë", "qani", "qajnë", "dashuroj", "dashuron", "dashurojmë", "dashuroni", "dashurojnë",
+  
+  // 6-letter words
+  "arkivë", "banorë", "bukuri", "cilësi", "drejtë", "dallim", "emocion", "flamur", "gazetar", "historia", 
+  "institut", "jetësor", "kryesor", "lëvizje", "magazinë", "ndërtim", "oficer", "problem", "qëndrim", "rezultat", 
+  "shkencë", "shoqëri", "teori", "universiteti", "veprimi", "xhelozia", "zanore", "zhvillim", "politikë", "program", 
+  "ligjëratë", "krahasim", "informacion", "kombëtar", "kulturë", "qytetërimi", "zbuloj", "autostradë", "bisedim",
+  
+  // 7-letter words
+  "aktivitet", "bashkësi", "certifikatë", "dëshirë", "ekonomi", "familje", "gjeneratë", "histori", "integrim", "karrierë", 
+  "laborator", "marrëveshje", "ndryshim", "organizim", "parlament", "reportazh", "statistikë", "teknologji", "vështirësi",
+  "zbatim", "drejtor", "ambient", "arsimor", "bashkim", "bashkëkohës", "ceremoni", "përfundim", "filozofi", "harmoni", 
+  "karakter", "kryeqytet", "kuptim", "veçanti", "literaturat", "marrëdhënie", "përgatitje", "përpunim", "pyetje", "shembull",
+  "shkrimtar", "shprehje", "studim", "subjekt", "tendencë", "trajnim", "vizatim", "udhëheqës",
+  
+  // 8-letter words
+  "akuzë", "automatik", "bashkëpunim", "demokraci", "diplomatik", "ekzistencë", "funksionim", "fotografi", "gjeneratë", 
+  "informatikë", "juridiksion", "konkurrent", "leksion", "mësimdhënie", "ndërgjegjësim", "organizatë", "perspektivë", 
+  "përqendrim", "profesional", "realitet", "shkollim", "studenti", "telefonatë", "transferim", "universitet", "veprimtari", 
+  "zyrtarisht", "aktivitete", "absolutisht", "aktualitet", "aprovim", "arsyetim", "artikulim", "asistencë", "atmosferë", 
+  "bashkëbisedim", "bibliotekë", "biografi", "dokument", "ekonomik", "ekzaminim", "elektronikë", "enciklopedi", "energjitik", 
+  "faktikisht", "fantastik", "farmaceutik", "fenomen", "festivali", "fillimisht", "financim", "formulim", "formular", 
+  "frymëzim", "gazetari", "gjeografi", "gjithashtu", "gjykimi", "grafik", "historik", "identitet", "ideologji", "ilustrim", 
+  "indirekt", "individual", "industri", "inspirim", "instalim", "institucion", "integrim", "intensiv", "interes", "interpret", 
+  "intervistim", "justifikim", "kalendarik", "kapacitet", "karakter", "kategori", "kërkimor", "klasifikim", "kolektiv", 
+  "kombinim", "komentim", "komunikim", "konceptim", "konkluzion", "konsensus", "konstruktiv", "kontekst", "kualitet", 
+  "kuriozitet", "kujdesshëm", "laborator", "legjislacion", "legjitim", "letërsi", "libërore", "licencë", "logjistikë", 
+  "madhështor", "maksimum", "marketing", "material", "meditim", "metodë", "minimalist", "ministrore", "misterioze", 
+  "modifikim", "motivimi", "muzikalitet", "nacionalist", "ndjeshmëri", "ndryshim", "ndërkombëtar", "negociator", "nervoz", 
+  "neutralitet", "normal", "normativ", "ofensiv", "oferta", "optimal", "optimist", "origjinal", "orientim"
 ];
 
-// Filter out words longer than 5 letters and remove duplicates
-export const WORD_LIST = [...new Set(ALBANIAN_WORDS.filter(word => word.length <= 5))];
-
+// Extract words up to 8 letters and remove duplicates
+export const WORD_LIST = [...new Set(ALBANIAN_WORDS.filter(word => word.length <= 8))];

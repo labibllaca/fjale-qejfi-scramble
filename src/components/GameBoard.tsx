@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import WordRow from './WordRow';
 import BuildWord from './BuildWord';
@@ -207,7 +206,7 @@ const GameBoard: React.FC = () => {
         if (currentWordIndex < gameWords.length - 1) {
           setCurrentWordIndex(currentWordIndex + 1);
         } else {
-          // Generate a new word
+          // Generate a new word and add it at the END of the array
           const today = new Date().toISOString().split('T')[0];
           const todaysPlayedWords = playedWords[today] || [];
           const usedWords = new Set(todaysPlayedWords.map(w => w.original));
@@ -229,6 +228,7 @@ const GameBoard: React.FC = () => {
             newWord = getRandomWord();
           }
           
+          // Add the new word at the end of the array
           setGameWords(prevWords => [
             ...prevWords,
             {
@@ -240,6 +240,9 @@ const GameBoard: React.FC = () => {
               date: today
             }
           ]);
+          
+          // Focus on the new word
+          setCurrentWordIndex(prevIndex => prevIndex + 1);
         }
       }
     }
