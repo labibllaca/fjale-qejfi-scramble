@@ -22,9 +22,12 @@ const WordTile: React.FC<WordTileProps> = ({
       onClick={onClick}
       className={`
         w-12 h-14 sm:w-16 sm:h-20 flex items-center justify-center text-xl sm:text-3xl font-bold
-        rounded-md transition-all flex-shrink-0 animate-pop-in hover:scale-105
-        ${isCompleted ? 'bg-gameGreen text-white' : 
-          isSelected ? 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200' : 'bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 text-black dark:text-white'}
+        rounded-md transition-all flex-shrink-0 transform hover:scale-105 
+        shadow-md hover:shadow-lg active:scale-95
+        animate-pop-in
+        ${isCompleted ? 'bg-gradient-to-br from-emerald-400 to-gameGreen text-white' : 
+          isSelected ? 'bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 ring-2 ring-blue-400 dark:ring-blue-500' : 
+          'bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 text-black dark:text-white hover:border-blue-300 dark:hover:border-blue-400'}
       `}
       style={{ fontSize: `calc(${isMobile ? '1.25rem' : '1.875rem'} * var(--letter-size-scale, 100) / 100)` }}
     >
