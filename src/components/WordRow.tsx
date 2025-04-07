@@ -5,7 +5,6 @@ import { formatSmallTime } from '../utils/wordUtils';
 import { useIsMobile } from '../hooks/use-mobile';
 
 interface WordRowProps {
-  rowNumber?: number; // Make rowNumber optional
   word: string;
   shuffledWord: string;
   onLetterClick: (letter: string, index: number) => void;
@@ -16,7 +15,6 @@ interface WordRowProps {
 }
 
 const WordRow: React.FC<WordRowProps> = ({
-  rowNumber,
   word,
   shuffledWord,
   onLetterClick,
