@@ -56,7 +56,7 @@ const GameBoard: React.FC = () => {
     <div className="max-w-xl mx-auto px-2 sm:px-4">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <div>
-          <h1 className="text-2xl sm:text-4xl font-bold dark:text-white">Fjalë qejfi</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold dark:text-white animate-fade-in">Fjalë qejfi</h1>
           <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">Rindërtoni fjalët e përziera</p>
         </div>
         <Timer initialTime={GAME_TIME} onTimeUp={handleGameOver} />
@@ -72,7 +72,6 @@ const GameBoard: React.FC = () => {
         {gameWords.map((word, index) => (
           <WordRow
             key={`word-${index}-${word.original}`}
-            rowNumber={index + 1}
             word={word.original}
             shuffledWord={word.shuffled}
             onLetterClick={(letter, letterIndex) => {

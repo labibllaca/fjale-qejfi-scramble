@@ -15,9 +15,9 @@ const BottomWordDisplay: React.FC<BottomWordDisplayProps> = ({
   correctWord
 }) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 p-2 sm:p-4 bg-white dark:bg-gray-800 border-t dark:border-gray-700 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 p-2 sm:p-4 bg-white dark:bg-gray-800 border-t dark:border-gray-700 shadow-lg animate-slide-in-bottom">
       {showCorrectWord && (
-        <div className="mb-2 text-center text-green-600 dark:text-green-400 font-bold">
+        <div className="mb-2 text-center text-green-600 dark:text-green-400 font-bold animate-pulse">
           {correctWord.toUpperCase()}
         </div>
       )}
@@ -25,8 +25,9 @@ const BottomWordDisplay: React.FC<BottomWordDisplayProps> = ({
         {word.split('').map((letter, index) => (
           <div 
             key={index}
-            className="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded flex items-center justify-center text-lg sm:text-xl font-bold dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+            className="w-10 h-10 sm:w-12 sm:h-12 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded flex items-center justify-center text-lg sm:text-xl font-bold dark:text-white cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors hover:scale-110 transform transition-transform animate-pop-in"
             onClick={() => onLetterClick(letter, index)}
+            style={{ fontSize: 'calc(1.25rem * var(--letter-size-scale, 100) / 100)' }}
           >
             {letter.toUpperCase()}
           </div>

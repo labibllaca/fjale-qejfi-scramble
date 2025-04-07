@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Calendar, HelpCircle, Sun, Moon } from "lucide-react";
+import { Calendar, HelpCircle, Sun, Moon, Settings } from "lucide-react";
 import { useIsMobile } from '../hooks/use-mobile';
 import { useTheme } from '../contexts/ThemeContext';
 import { 
@@ -19,12 +19,14 @@ import {
   DialogTrigger 
 } from "@/components/ui/dialog";
 import { format } from "date-fns";
+import SettingsComponent from './Settings';
 
 const Header = () => {
   const isMobile = useIsMobile();
   const { theme, toggleTheme } = useTheme();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [showHelp, setShowHelp] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   
   // Check if we have played words for the selected date
   const getPlayedWords = (selectedDate: Date | undefined) => {
@@ -53,11 +55,11 @@ const Header = () => {
       <div className="flex items-center space-x-2 sm:space-x-4">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="ghost" className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+            <Button variant="ghost" className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full animate-fade-in">
               <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500 dark:text-gray-300" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="p-0" align="end">
+          <PopoverContent className="p-0 animate-scale-in" align="end">
             <div className="flex flex-col space-y-2 p-2">
               <CalendarComponent
                 mode="single"
@@ -103,13 +105,17 @@ const Header = () => {
           </PopoverContent>
         </Popover>
         
+        <Button variant="ghost" className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full animate-fade-in" onClick={() => setShowSettings(true)}>
+          <Settings className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500 dark:text-gray-300" />
+        </Button>
+        
         <Dialog open={showHelp} onOpenChange={setShowHelp}>
           <DialogTrigger asChild>
-            <Button variant="ghost" className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full">
+            <Button variant="ghost" className="p-1 sm:p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full animate-fade-in">
               <HelpCircle className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500 dark:text-gray-300" />
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="animate-scale-in">
             <DialogHeader>
               <DialogTitle>Si të luash Fjalë Qejfi</DialogTitle>
               <DialogDescription>
@@ -142,7 +148,7 @@ const Header = () => {
         <Button 
           onClick={toggleTheme} 
           variant="ghost"
-          className="p-1 sm:p-2 bg-blue-500 rounded-full hover:bg-blue-600 transition-colors"
+          className="p-1 sm:p-2 bg-blue-500 rounded-full hover:bg-blue-600 transition-colors animate-fade-in"
         >
           {theme === 'light' ? (
             <Moon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
@@ -151,6 +157,9 @@ const Header = () => {
           )}
         </Button>
       </div>
+      
+      {/* Settings Modal */}
+      <SettingsComponent open={showSettings} onOpenChange={setShowSettings} />
     </header>
   );
 };
