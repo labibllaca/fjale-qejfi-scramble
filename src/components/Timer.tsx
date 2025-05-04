@@ -6,28 +6,26 @@ import { formatTime } from '../utils/wordUtils';
 interface TimerProps {
   initialTime: number;
   onTimeUp: () => void;
+  isGameStarted: boolean;
 }
 
-const Timer: React.FC<TimerProps> = ({ initialTime, onTimeUp }) => {
+const Timer: React.FC<TimerProps> = ({ initialTime, onTimeUp, isGameStarted }) => {
   const [timeRemaining, setTimeRemaining] = useState(initialTime);
   const timerIntervalRef = useRef<number | null>(null);
   const timerInitializedRef = useRef(false);
   
   useEffect(() => {
-    // Only initialize the timer once
-    if (timerInitializedRef.current) return;
-    
     // Load custom game time if available
     const savedGameTime = localStorage.getItem('gameTime');
     const gameTimeMinutes = savedGameTime ? parseInt(savedGameTime) : 5;
     const gameTimeSeconds = gameTimeMinutes * 60;
     
-    if (savedGameTime) {
+    if (savedGameTime && !timerInitializedRef.current) {
       setTimeRemaining(gameTimeSeconds);
     }
     
-    // Start the timer only once
-    if (!timerIntervalRef.current) {
+    // Start the timer when isGameStarted becomes true
+    if (isGameStarted && !timerIntervalRef.current) {
       timerInitializedRef.current = true;
       
       timerIntervalRef.current = window.setInterval(() => {
@@ -52,7 +50,7 @@ const Timer: React.FC<TimerProps> = ({ initialTime, onTimeUp }) => {
         timerIntervalRef.current = null;
       }
     };
-  }, [onTimeUp]);
+  }, [isGameStarted, onTimeUp]);
   
   return (
     <div className="flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-700 dark:to-gray-800 p-3 rounded-lg animate-fade-in shadow-md">

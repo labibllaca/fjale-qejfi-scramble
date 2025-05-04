@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import WordRow from './WordRow';
 import BuildWord from './BuildWord';
 import Timer from './Timer';
@@ -7,12 +7,12 @@ import GameOver from './GameOver';
 import BottomWordDisplay from './BottomWordDisplay';
 import { useIsMobile } from '../hooks/use-mobile';
 import { useGameState } from '../hooks/use-game-state';
-import { shuffleWord } from '../utils/wordUtils';
 
 const GAME_TIME = 5 * 60; // 5 minutes in seconds
 
 const GameBoard: React.FC = () => {
   const isMobile = useIsMobile();
+  const [gameStarted, setGameStarted] = useState(false);
   const {
     gameWords,
     currentWordIndex,
@@ -27,8 +27,37 @@ const GameBoard: React.FC = () => {
 
   const [showCorrectWord, setShowCorrectWord] = useState(false);
 
+  // Start the game when the user makes the first interaction
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (!gameStarted) {
+        setGameStarted(true);
+        // Remove event listeners after the game has started
+        document.removeEventListener('click', handleFirstInteraction);
+        document.removeEventListener('touchstart', handleFirstInteraction);
+        document.removeEventListener('keydown', handleFirstInteraction);
+      }
+    };
+
+    // Add event listeners for user interactions
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('touchstart', handleFirstInteraction);
+    document.addEventListener('keydown', handleFirstInteraction);
+
+    // Clean up on unmount
+    return () => {
+      document.removeEventListener('click', handleFirstInteraction);
+      document.removeEventListener('touchstart', handleFirstInteraction);
+      document.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, [gameStarted]);
+
   // Function to handle bottom word letter click
   const handleBottomLetterClick = (letter: string, index: number) => {
+    if (!gameStarted) {
+      setGameStarted(true);
+    }
+    
     handleLetterClick(letter, index);
     
     // Check if the word is completed after this letter
@@ -50,6 +79,11 @@ const GameBoard: React.FC = () => {
     handleBottomLetterClick(letter, index);
   };
 
+  // Restart game function
+  const handleRestartGame = () => {
+    window.location.reload();
+  };
+
   return (
     <div className="max-w-xl mx-auto px-2 sm:px-4">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
@@ -57,7 +91,11 @@ const GameBoard: React.FC = () => {
           <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent animate-fade-in">Fjalë qejfi</h1>
           <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">Rindërtoni fjalët e përziera</p>
         </div>
-        <Timer initialTime={GAME_TIME} onTimeUp={handleGameOver} />
+        <Timer 
+          initialTime={GAME_TIME} 
+          onTimeUp={handleGameOver} 
+          isGameStarted={gameStarted}
+        />
       </div>
       
       <BuildWord 
@@ -88,7 +126,7 @@ const GameBoard: React.FC = () => {
       {gameOver && (
         <GameOver 
           gameWords={gameWords} 
-          onRestart={() => window.location.reload()} 
+          onRestart={handleRestartGame} 
         />
       )}
       
