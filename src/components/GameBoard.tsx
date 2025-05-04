@@ -33,9 +33,11 @@ const GameBoard: React.FC = () => {
     
     // Check if the word is completed after this letter
     const currentWord = gameWords[currentWordIndex];
+    if (!currentWord) return;
+    
     const newSelectedWord = [...selectedLetters, letter].join('').toLowerCase();
     
-    if (newSelectedWord === currentWord?.original.toLowerCase()) {
+    if (newSelectedWord === currentWord.original.toLowerCase()) {
       // If correct word assembled, show the correct word briefly
       setShowCorrectWord(true);
       setTimeout(() => setShowCorrectWord(false), 2000); // Show for 2 seconds
@@ -46,10 +48,6 @@ const GameBoard: React.FC = () => {
   const handleRandomizeBottomLetter = (letter: string, index: number) => {
     // First add the letter to selected letters
     handleBottomLetterClick(letter, index);
-    
-    // Then shuffle the remaining letters in the bottom display
-    // This is handled automatically by the game state as we're using the same
-    // letter indices tracking mechanism
   };
 
   return (
@@ -94,7 +92,7 @@ const GameBoard: React.FC = () => {
         />
       )}
       
-      {!gameOver && (
+      {!gameOver && currentWordIndex < gameWords.length && (
         <BottomWordDisplay 
           word={currentBottomWord} 
           onLetterClick={handleRandomizeBottomLetter}

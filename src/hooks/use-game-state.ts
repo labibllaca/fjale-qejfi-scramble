@@ -85,12 +85,12 @@ export const useGameState = () => {
   const handleLetterClick = useCallback((letter: string, index: number) => {
     const currentWord = gameWords[currentWordIndex];
     
-    if (currentWord?.completed) {
+    if (!currentWord || currentWord.completed) {
       return;
     }
     
     // Check if this index is already selected
-    if (currentWord?.selectedIndices.includes(index)) {
+    if (currentWord.selectedIndices.includes(index)) {
       // Find the position in selectedLetters
       const letterPosition = currentWord.selectedIndices.indexOf(index);
       
@@ -125,11 +125,12 @@ export const useGameState = () => {
       // Update the game word
       setGameWords(prevWords => {
         const updatedWords = [...prevWords];
-        updatedWords[currentWordIndex] = {
-          ...updatedWords[currentWordIndex],
-          selectedIndices: [...updatedWords[currentWordIndex].selectedIndices, index],
-        };
-        
+        if (currentWordIndex < updatedWords.length) {
+          updatedWords[currentWordIndex] = {
+            ...updatedWords[currentWordIndex],
+            selectedIndices: [...updatedWords[currentWordIndex].selectedIndices, index],
+          };
+        }
         return updatedWords;
       });
       
