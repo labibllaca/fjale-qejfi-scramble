@@ -54,7 +54,7 @@ const GameBoard: React.FC = () => {
     <div className="max-w-xl mx-auto px-2 sm:px-4">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
         <div>
-          <h1 className="text-2xl sm:text-4xl font-bold dark:text-white animate-fade-in">Fjalë qejfi</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent animate-fade-in">Fjalë qejfi</h1>
           <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 mt-1 sm:mt-2">Rindërtoni fjalët e përziera</p>
         </div>
         <Timer initialTime={GAME_TIME} onTimeUp={handleGameOver} />
@@ -66,7 +66,7 @@ const GameBoard: React.FC = () => {
         onClear={handleClearSelection}
       />
       
-      <div className="space-y-2 sm:space-y-4 mb-24">
+      <div className="space-y-2 sm:space-y-4 mb-24 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-3 sm:p-5 border border-gray-200 dark:border-gray-700 shadow-lg">
         {gameWords.map((word, index) => (
           <WordRow
             key={`word-${index}-${word.original}`}

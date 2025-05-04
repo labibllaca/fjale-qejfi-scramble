@@ -32,8 +32,8 @@ const WordRow: React.FC<WordRowProps> = ({
   const displayWord = isCompleted ? word : shuffledWord;
   
   return (
-    <div className="flex items-center space-x-1 sm:space-x-2 mb-2 sm:mb-4">
-      <div className="flex space-x-1 flex-1 overflow-x-auto pb-1 scrollbar-hide">
+    <div className="flex items-center mb-2 sm:mb-4 w-full">
+      <div className="flex flex-wrap gap-1 sm:gap-2 flex-1 min-w-0">
         {displayWord.split('').map((letter, index) => (
           <WordTile 
             key={index} 
@@ -45,7 +45,7 @@ const WordRow: React.FC<WordRowProps> = ({
         ))}
       </div>
       {shouldShowTimer && (
-        <div className="timer bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-lg text-sm font-medium animate-fade-in ml-2">
+        <div className="timer bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-lg text-sm font-medium animate-fade-in ml-2 flex-shrink-0">
           {formatSmallTime(solveTime)}
         </div>
       )}

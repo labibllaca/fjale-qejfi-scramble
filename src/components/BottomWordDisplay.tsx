@@ -21,11 +21,11 @@ const BottomWordDisplay: React.FC<BottomWordDisplayProps> = ({
           {correctWord.toUpperCase()}
         </div>
       )}
-      <div className="max-w-xl mx-auto flex justify-center space-x-2 sm:space-x-4">
+      <div className="max-w-xl mx-auto flex flex-wrap justify-center gap-2 sm:gap-3 stagger-animation">
         {word.split('').map((letter, index) => (
           <div 
             key={index}
-            className="w-11 h-11 sm:w-14 sm:h-14 bg-white dark:bg-gray-700 border-2 border-gray-200 dark:border-gray-600 rounded-xl flex items-center justify-center text-lg sm:text-xl font-bold dark:text-white cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors hover:scale-110 transform transition-transform animate-pop-in shadow-md hover:shadow-lg active:scale-95"
+            className="w-11 h-11 sm:w-14 sm:h-14 bg-gradient-to-br from-white to-gray-100 dark:from-gray-700 dark:to-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-xl flex items-center justify-center text-lg sm:text-xl font-bold dark:text-white cursor-pointer hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors hover:scale-110 transform transition-transform animate-pop-in shadow-md hover:shadow-lg active:scale-95"
             onClick={() => onLetterClick(letter, index)}
             style={{ fontSize: 'calc(1.25rem * var(--letter-size-scale, 100) / 100)', animationDelay: `${index * 50}ms` }}
           >
