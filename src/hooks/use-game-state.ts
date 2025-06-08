@@ -231,6 +231,35 @@ export const useGameState = () => {
     }
   }, [gameWords, currentWordIndex, selectedLetters, letterIndices, playedWords]);
 
+  const handleWrongAttempt = useCallback(() => {
+    setGameWords(prevWords => {
+      const updatedWords = [...prevWords];
+      const currentWord = updatedWords[currentWordIndex];
+      if (currentWord) {
+        const wrongAttempts = (currentWord.wrongAttempts || 0) + 1;
+        updatedWords[currentWordIndex] = {
+          ...currentWord,
+          wrongAttempts,
+        };
+        
+        // Show hint after 5 wrong attempts
+        if (wrongAttempts === 5 && !currentWord.hintUsed) {
+          const firstLetter = currentWord.original[0].toLowerCase();
+          toast({
+            title: "Ndihmë!",
+            description: `Fjala fillon me shkronjën: "${firstLetter.toUpperCase()}"`,
+          });
+          
+          updatedWords[currentWordIndex] = {
+            ...updatedWords[currentWordIndex],
+            hintUsed: true,
+          };
+        }
+      }
+      return updatedWords;
+    });
+  }, [currentWordIndex]);
+
   const handleSelectedLetterClick = (index: number) => {
     // Remove letter from selection
     const newSelectedLetters = [...selectedLetters];
@@ -262,6 +291,11 @@ export const useGameState = () => {
   };
 
   const handleClearSelection = () => {
+    // Check if there were selected letters to count as wrong attempt
+    if (selectedLetters.length > 0) {
+      handleWrongAttempt();
+    }
+    
     setSelectedLetters([]);
     setLetterIndices([]);
     
@@ -295,5 +329,6 @@ export const useGameState = () => {
     handleSelectedLetterClick,
     handleClearSelection,
     handleGameOver,
+    handleWrongAttempt,
   };
 };

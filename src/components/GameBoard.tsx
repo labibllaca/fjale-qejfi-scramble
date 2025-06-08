@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import WordRow from './WordRow';
 import BuildWord from './BuildWord';
@@ -84,6 +83,8 @@ const GameBoard: React.FC = () => {
     window.location.reload();
   };
 
+  const currentWord = gameWords[currentWordIndex];
+
   return (
     <div className="max-w-xl mx-auto px-2 sm:px-4">
       <div className="flex justify-between items-center mb-4 sm:mb-6">
@@ -102,6 +103,8 @@ const GameBoard: React.FC = () => {
         selectedLetters={selectedLetters}
         onLetterClick={handleSelectedLetterClick}
         onClear={handleClearSelection}
+        wrongAttempts={currentWord?.wrongAttempts || 0}
+        hintUsed={currentWord?.hintUsed || false}
       />
       
       <div className="space-y-2 sm:space-y-4 mb-24 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-lg p-3 sm:p-5 border border-gray-200 dark:border-gray-700 shadow-lg">
